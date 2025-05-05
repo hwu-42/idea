@@ -1,2 +1,4 @@
 # idea
 ai 的基础
+pattern的存在性，基于关系的连续性，或者不连续区域的0测度。我们需要pattern的前提是，我们默认pattern的存在。给与更多的sample可以更好的draw the pattern,如果关系不是连续的，则根本通过sampling来寻找pattern的努力就是无意义的。
+重要客户，证明关系的存在。证明可以起始与，限于某个领域内关系的连续性。
