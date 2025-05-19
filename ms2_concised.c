@@ -93,7 +93,8 @@ int main(int ac, char **av) {
     if (sockfd < 0) fatal();
 
     struct sockaddr_in addr = { .sin_family = AF_INET, .sin_addr.s_addr = htonl(2130706433), .sin_port = htons(port) };
-    if (bind(sockfd, (struct sockaddr *)&addr, sizeof(addr)) < 0 || listen(sockfd, 10) < 0) fatal();
+    if (bind(sockfd, (struct sockaddr *)&addr, sizeof(addr)) < 0 || listen(sockfd, 10) < 0)
+        fatal();
 
     max_fd = sockfd;
     FD_ZERO(&active_set);
