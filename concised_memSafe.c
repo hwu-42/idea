@@ -1,3 +1,4 @@
+#include <signal.h>
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
@@ -6,6 +7,7 @@
 #include <netinet/in.h>
 #include <stdio.h>
 
+
 // Client structure to store ID, socket FD, message buffer, and linked list pointer
 typedef struct s_client {
     int id, fd;           // Client ID and socket file descriptor
@@ -13,11 +15,17 @@ typedef struct s_client {
     struct s_client *next;// Pointer to next client
 } t_client;
 
+
+
 // Global variables for client list, max FD, and FD sets for select()
 t_client *g_clients = NULL; // Linked list of connected clients
 int max_fd = 0;             // Highest FD for select()
 int sockfd;
+
+
 fd_set read_set, write_set, active_set; // FD sets for reading, writing, and active FDs
+
+void remove_client(t_client **clients, int fd);
 
 void cleanup() {
     while (g_clients) {
@@ -25,7 +33,7 @@ void cleanup() {
     }
     int i = 0;
     while (i < max_fd) {
-        if (FD_ISSET(i, active_set))
+        if (FD_ISSET(i, &active_set))
             close (i);
         i++;
     }
@@ -119,9 +127,16 @@ char *str_join(char *buf, char *add) {
 int main(int ac, char **av) {
     // Check for exactly one argument (port)
     if (ac != 2) {
-        write(2, "Wrong number of arguments\n", 26);
+        if (ac == 1)
+            write(2, "please provide port number\n", 27);
+        else
+            write(2, "Wrong number of arguments\n", 26);
         exit(1);
     }
+
+    //exit gracefully when killed
+    signal(SIGINT, signal_handler);
+    signal(SIGTERM, signal_handler);
 
     // Convert port argument to integer
     int port = atoi(av[1]);
